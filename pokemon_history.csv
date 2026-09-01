@@ -1,10 +1,5 @@
-number,name,is_gen1
-691,Dragalge,False
-73,Tentacruel,True
-146,Moltres,True
-329,Vibrava,False
-897,Spectrier,False
-808,Meltan,False
-586,Sawsbuck,False
-512,Simisage,False
-1007,Koraidon,False
+number,name,type,is_gen1
+663,Talonflame,"fire, flying",False
+107,Hitmonchan,fighting,True
+888,Zacian,fairy,False
+194,Wooper,"water, ground",False
