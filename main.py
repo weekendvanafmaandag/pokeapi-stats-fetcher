@@ -1,54 +1,47 @@
 import random
-import requests
+import requests as rq
+from data_handler import save_pokemon_data
 
 MAX_POKEMON = 1025
 
 
-def rand_poke():
-    poke_num = random.randint(1, MAX_POKEMON)
-    print(f"poke_num:  {poke_num}")
-    return poke_num
+def get_random_number():
+    num = random.randint(1, MAX_POKEMON)
+    print(f"poke_num: {num}")
+    return num
 
 
-def poke_real(poke_num):
-    if poke_num <= 151:
-        real = True
-    else:
-        real = False
-    return real
+def check_is_gen1(num):
+    return num <= 151
 
 
-def get_name(pokedex_num):
-    url = f"https://pokeapi.co/api/v2/pokemon/{pokedex_num}"
+def get_pokemon_name(num):
+    url = f"https://pokeapi.co/api/v2/pokemon/{num}"
     headers = {"User-Agent": "PokeApp/1.0"}
 
     try:
-        response = requests.get(url=url, headers=headers, timeout=10)
-
-        # 1. Alleen aanroepen (niet printen!)
+        response = rq.get(url=url, headers=headers, timeout=10)
         response.raise_for_status()
 
-        # 2. Pas daarna omzetten naar JSON
         data = response.json()
-        poke_naam = data["name"]
+        return data["name"].capitalize()
 
-        return poke_naam
-
-    except requests.exceptions.RequestException as e:
-        return f"Ophalen mislukt (foutmelding: {e})"
+    except rq.exceptions.RequestException as e:
+        print(f"Fetch failed: {e}")
+        return None
 
 
 def main():
-    # 1. Haal een random nummer op
-    nummer = rand_poke()
+    num = get_random_number()
+    is_gen1 = check_is_gen1(num)
+    name = get_pokemon_name(num)
 
-    # 2. Voer de check uit
-    poke_real(nummer)
+    if name:
+        print(f"poke_name: {name}")
+        print(f"is_gen1:   {is_gen1}")
 
-    # 3. Haal de naam op en print deze
-    naam = get_name(nummer).capitalize()
-
-    print("poke_name: " + naam)
+        # Send data to data_handler.py
+        save_pokemon_data(number=num, name=name, is_gen1=is_gen1)
 
 
 if __name__ == "__main__":
